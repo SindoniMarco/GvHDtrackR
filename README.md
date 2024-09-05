@@ -14,6 +14,7 @@ To use GvHDtrackR, you need to run it as a local Shiny app; required steps:
 
 ## Contacts
 E-mail: m.sindoni3@campus.unimib.it
+
 Written by Marco Maria Sindoni
     
 
