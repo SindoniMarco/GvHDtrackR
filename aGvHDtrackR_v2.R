@@ -218,7 +218,6 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                   )
 )
                    
-
 server <- function(input, output, session) {
   data <- reactive({
     skin_stage <- ifelse(input$GvHD == "Yes" & input$Skin == "NA",0,

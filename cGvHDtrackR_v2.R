@@ -275,6 +275,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                 )
 )
 
+
 server <- function(input, output) {
   data <- reactive({
     skin_grading <- ifelse(input$GvHD == "Yes" & input$Skin1 == "No Skin manifestations" & input$Skin2 == "No BSA involved" & input$Skin3 == "No Sclerotic features", 0,
