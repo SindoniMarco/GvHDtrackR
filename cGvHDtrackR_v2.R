@@ -18,7 +18,7 @@ previous_data <- length(summary_table$Name)
 birth <- ifelse(previous_data > 0, summary_table$`Date of birth`[1], Sys.Date())
 HSCT <- ifelse(previous_data > 0, summary_table$`Date HSCT`[1], Sys.Date())
 ID <- if(previous_data > 0) {summary_table$`Patient ID`[1]}
-treatment <- c("No CSA", "No MMF", "No mPDN", "No topic steroid", "No Ruxolitinib", "No ECP", "No Etanercept", 
+treatment <- c("No CSA", "No MMF", "No mPDN", "No topical steroid", "No Ruxolitinib", "No ECP", "No Etanercept", 
                "No Infliximab", "No Abatacept", "No Belumosudil", "No Begelomab", "No Sirolimus", "No mPDN Pulse", "No MSC", 
                "No Axatilimab", "No Ibrutinib", "No FAM", "No Imatinib", "No topical ocular treatment")
 
@@ -94,7 +94,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                                                             'Cyclosporine',
                                                                                             'Mycophenolate Mofetil',
                                                                                             'Methylprednisolone',
-                                                                                            'Topic steroid',
+                                                                                            'Topical steroid',
                                                                                             'Ruxolitinib',
                                                                                             'Extracorporeal photopheresis',
                                                                                             'Etanercept',
@@ -134,12 +134,12 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                                    language = "it"),
                                                          dateInput("DatemPDNStop", "Date stop mPDN",
                                                                    language = "it")),
-                                        conditionalPanel("input.input1 == 'Topic steroid'",
-                                                         selectInput("Steroid", "Topic steroid treatment", 
-                                                                     c("No topic steroid", "Topic steroid", "Stop topic steroid")),
-                                                         dateInput("DateSteroid", "Date start topic steroid",
+                                        conditionalPanel("input.input1 == 'Topical steroid'",
+                                                         selectInput("Steroid", "Topical steroid treatment", 
+                                                                     c("No topical steroid", "Topical steroid", "Stop topical steroid")),
+                                                         dateInput("DateSteroid", "Date start topical steroid",
                                                                    language = "it"),
-                                                         dateInput("DateSteroidStop", "Date stop topic steroid",
+                                                         dateInput("DateSteroidStop", "Date stop topical steroid",
                                                                    language = "it")),
                                         conditionalPanel("input.input1 == 'Ruxolitinib'",
                                                          selectInput("Ruxo", "Ruxolitinib treatment", 
@@ -364,7 +364,7 @@ server <- function(input, output) {
                              "CSA treatment",	"Date starting / change CSA", "Date stop CSA",
                              "MMF treatment",	"Date starting / change MMF", "Date stop MMF",
                              "mPDN treatment",	"Date starting / change mPDN", "Date stop mPDN",
-                             "Topic steroid treatment",	"Date starting topic steroid treatment", "Date stop topic steroid treatment",
+                             "Topical steroid treatment",	"Date starting topical steroid treatment", "Date stop topical steroid treatment",
                              "Ruxolitinib treatment",	"Date starting / change Ruxolitinib", "Date stop Ruxolitinib",
                              "ECP treatment",	"Date starting ECP", "Date stop ECP",
                              "Etanercept treatment",	"Date starting Etanercept", "Date stop Etanercept",
@@ -393,9 +393,9 @@ server <- function(input, output) {
     N_metrics["Date stop mPDN"] <- ifelse(N_metrics["mPDN treatment"] == "No mPDN", "",
                                           ifelse(N_metrics["mPDN treatment"] %in% c("1.8-2.5 mg/kg", "1.5-1.7 mg/kg", "1-1.4 mg/kg", "0.5-0.9 mg/kg", "<0.5 mg/kg"), "Ongoing", N_metrics["Date stop mPDN"]))
     
-    N_metrics["Date starting topic steroid treatment"] <- ifelse(N_metrics["Topic steroid treatment"] == "No topic steroid", "", N_metrics["Date starting topic steroid treatment"])
-    N_metrics["Date stop topic steroid treatment"] <- ifelse(N_metrics["Topic steroid treatment"] == "No topic steroid", "",
-                                                             ifelse(N_metrics["Topic steroid treatment"] == "Topic steroid", "Ongoing", N_metrics["Date stop topic steroid treatment"]))
+    N_metrics["Date starting topical steroid treatment"] <- ifelse(N_metrics["Topical steroid treatment"] == "No topical steroid", "", N_metrics["Date starting topical steroid treatment"])
+    N_metrics["Date stop topical steroid treatment"] <- ifelse(N_metrics["Topical steroid treatment"] == "No topical steroid", "",
+                                                             ifelse(N_metrics["Topical steroid treatment"] == "Topical steroid", "Ongoing", N_metrics["Date stop topical steroid treatment"]))
 
     N_metrics["Date starting / change Ruxolitinib"] <- ifelse(N_metrics["Ruxolitinib treatment"] == "No Ruxolitinib", "", N_metrics["Date starting / change Ruxolitinib"])
     N_metrics["Date stop Ruxolitinib"] <- ifelse(N_metrics["Ruxolitinib treatment"] == "No Ruxolitinib", "",
