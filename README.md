@@ -10,7 +10,8 @@ To use GvHDtrackR, you need to run it as a local Shiny app; required steps:
         * https://posit.co/download/rstudio-desktop/
   3) Download the GvHDtrackR repository from
         * https://github.com/SindoniMarco/GvHDtrackR
-  5) Open the R script with RStudio and click "Run App"
+  5) Save all the files in the same repository
+  6) Open the R script with RStudio and click "Run App"
 
 ## Contacts
 E-mail: m.sindoni3@campus.unimib.it
