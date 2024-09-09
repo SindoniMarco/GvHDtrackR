@@ -556,6 +556,25 @@ server <- function(input, output) {
       Data <- rbind(database, data()) 
       write_xlsx(x = Data, fname)
     })
+  
+  output$report = downloadHandler(
+    filename = function() {paste0("report_aGvHD ", input$Data, ".pdf")},
+    content = function(file) {
+      pdf(file = file, height = 8, width = 13)
+      tabella <- data()[,c(22:94)] %>%
+        select(where(~ !(all(is.na(.)) | all(. == "")))) %>%
+        select(where(~ !all(. %in% treatment)))
+      tabella1 <- tableGrob(data()[,c(1:7)], rows = "")
+      tabella2 <- tableGrob(t(data()[,c(8:21)]))
+      if(length(tabella) > 0){
+        tabella3 <- tableGrob(t(tabella))
+      } else{tabella3 <- tableGrob("No Therapy ongoing")}
+      
+      grid.arrange(arrangeGrob(tabella1, tabella2, nrow = 2, ncol = 1),
+                   arrangeGrob(tabella3, nrow = 1, ncol = 1), widths=c(2,1), heights = c(1,0))
+      dev.off()
+    })
+  
 }
 shinyApp(ui = ui, server = server)
 
