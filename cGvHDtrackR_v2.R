@@ -32,9 +32,9 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                             textInput("Name", "Name", value = summary_table$Name[1]),
                             textInput("Surname", "Surname", value = summary_table$Surname[1]),
                             dateInput("DateBirth", "Date of birth",
-                                      language = "it", value = birth),
+                                       value = birth),
                             dateInput("DateHSCT", "Date of HSCT",
-                                      language = "it", value = HSCT),
+                                       value = HSCT),
                             textInput("ID", "Patient ID", value = ID)),
                           mainPanel (width = 0)
                         )
@@ -44,7 +44,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                            sidebarPanel(width=12, id="sidebar2",
                                         h4("GvHD"),
                                         dateInput("Date", "Date of today",
-                                                  language = "it"),
+                                                  ),
                                         radioButtons("GvHD", "The patient has GvHD?", c("No", "Yes")),
                                         selectInput("Skin1", "Skin manifestation", 
                                                     c("No Skin manifestations", "Macupapular rash / erythema", "Liche planus-like features",
@@ -117,143 +117,143 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                         conditionalPanel("input.input1 == 'Cyclosporine'",
                                                          selectInput("CSA", "CSA treatment", 
                                                                      c("No CSA", "Full dose", "Tapering", "Stop CSA")),
-                                                         dateInput("DateCSA", "Date start /change CSA",
-                                                                   language = "it", ),
-                                                         dateInput("DateCSAStop", "Date stop CSA",
-                                                                   language = "it")),
+                                                         dateInput("DateCSA", "Date start /change CSA"
+                                                                    ),
+                                                         dateInput("DateCSAStop", "Date stop CSA"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Mycophenolate Mofetil'",
                                                          selectInput("MMF", "MMF treatment", 
                                                                      c("No MMF", "Full dose", "Tapering", "Stop MMF")),
-                                                         dateInput("DateMMF", "Date start /change MMF",
-                                                                   language = "it", ),
-                                                         dateInput("DateMMFStop", "Date stop MMF",
-                                                                   language = "it")),
+                                                         dateInput("DateMMF", "Date start /change MMF"
+                                                                  ),
+                                                         dateInput("DateMMFStop", "Date stop MMF"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Methylprednisolone'",
                                                          selectInput("mPDN", "mPDN treatment", 
                                                                      c("No mPDN", "1.8-2.5 mg/kg", "1.5-1.7 mg/kg", "1-1.4 mg/kg", "0.5-0.9 mg/kg", "<0.5 mg/kg", "Stop mPDN")),
-                                                         dateInput("DatemPDN", "Date start / change mPDN",
-                                                                   language = "it"),
-                                                         dateInput("DatemPDNStop", "Date stop mPDN",
-                                                                   language = "it")),
+                                                         dateInput("DatemPDN", "Date start / change mPDN"
+                                                                   ),
+                                                         dateInput("DatemPDNStop", "Date stop mPDN"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Topical steroid'",
                                                          selectInput("Steroid", "Topical steroid treatment", 
                                                                      c("No topical steroid", "Topical steroid", "Stop topical steroid")),
-                                                         dateInput("DateSteroid", "Date start topical steroid",
-                                                                   language = "it"),
-                                                         dateInput("DateSteroidStop", "Date stop topical steroid",
-                                                                   language = "it")),
+                                                         dateInput("DateSteroid", "Date start topical steroid"
+                                                                   ),
+                                                         dateInput("DateSteroidStop", "Date stop topical steroid"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Ruxolitinib'",
                                                          selectInput("Ruxo", "Ruxolitinib treatment", 
                                                                      c("No Ruxolitinib", "Full dose", "Tapering", "Stop Ruxolitinib")),
-                                                         dateInput("DateRuxo", "Date start / change Ruxolitinib",
-                                                                   language = "it"),
-                                                         dateInput("DateRuxoStop", "Date stop Ruxolitinib",
-                                                                   language = "it")),
+                                                         dateInput("DateRuxo", "Date start / change Ruxolitinib"
+                                                                   ),
+                                                         dateInput("DateRuxoStop", "Date stop Ruxolitinib"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Extracorporeal photopheresis'",
                                                          selectInput("ECP", "ECP treatment", 
                                                                      c("No ECP", "ECP", "Stop ECP")),
-                                                         dateInput("DateECP", "Date start ECP",
-                                                                   language = "it"),
-                                                         dateInput("DateECPStop", "Date stop ECP",
-                                                                   language = "it")),
+                                                         dateInput("DateECP", "Date start ECP"
+                                                                   ),
+                                                         dateInput("DateECPStop", "Date stop ECP"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Etanercept'",
                                                          selectInput("Etanercept", "Etanercept treatment", 
                                                                      c("No Etanercept", "Etanercept", "Stop Etanercept")),
-                                                         dateInput("DateEtanercept", "Date start Etanercept",
-                                                                   language = "it"),
-                                                         dateInput("DateEtanerceptStop", "Date stop Etanercept",
-                                                                   language = "it")),
+                                                         dateInput("DateEtanercept", "Date start Etanercept"
+                                                                   ),
+                                                         dateInput("DateEtanerceptStop", "Date stop Etanercept"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Infliximab'",
                                                          selectInput("Infliximab", "Infliximab treatment", 
                                                                      c("No Infliximab", "Infliximab", "Stop Infliximab")),
-                                                         dateInput("DateInfliximab", "Date start Infliximab",
-                                                                   language = "it"),
-                                                         dateInput("DateInfliximabStop", "Date stop Infliximab",
-                                                                   language = "it")),
+                                                         dateInput("DateInfliximab", "Date start Infliximab"
+                                                                   ),
+                                                         dateInput("DateInfliximabStop", "Date stop Infliximab"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'FAM'",
                                                          selectInput("FAM", "FAM treatment", 
                                                                    c("No FAM", "FAM", "Stop FAM")),
-                                                         dateInput("DateFAM", "Date start FAM",
-                                                                   language = "it"),
-                                                         dateInput("DateFAMStop", "Date stop FAM",
-                                                                   language = "it")),
+                                                         dateInput("DateFAM", "Date start FAM"
+                                                                   ),
+                                                         dateInput("DateFAMStop", "Date stop FAM"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Azathioprine'",
                                                          selectInput("Azathioprine", "Azathioprine treatment", 
                                                                      c("No Azathioprine", "Azathioprine", "Stop Azathioprine")),
-                                                         dateInput("DateAzathioprine", "Date start Azathioprine",
-                                                                   language = "it"),
-                                                         dateInput("DateAzathioprineStop", "Date stop Azathioprine",
-                                                                   language = "it")),
+                                                         dateInput("DateAzathioprine", "Date start Azathioprine"
+                                                                   ),
+                                                         dateInput("DateAzathioprineStop", "Date stop Azathioprine"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Abatacept'",
                                                          selectInput("Abatacept", "Abatacept treatment", 
                                                                      c("No Abatacept", "Abatacept", "Stop Abatacept")),
-                                                         dateInput("DateAbatacept", "Date start Abatacept",
-                                                                   language = "it"),
-                                                         dateInput("DateAbataceptStop", "Date stop Abatacept",
-                                                                   language = "it")),
+                                                         dateInput("DateAbatacept", "Date start Abatacept"
+                                                                   ),
+                                                         dateInput("DateAbataceptStop", "Date stop Abatacept"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Belumosudil'",
                                                          selectInput("Belumosudil", "Belumosudil treatment", 
                                                                      c("No Belumosudil", "Belumosudil", "Stop Belumosudil")),
-                                                         dateInput("DateBelumosudil", "Date start Belumosudil",
-                                                                   language = "it"),
-                                                         dateInput("DateBelumosudilStop", "Date stop Belumosudil",
-                                                                   language = "it")),
+                                                         dateInput("DateBelumosudil", "Date start Belumosudil"
+                                                                   ),
+                                                         dateInput("DateBelumosudilStop", "Date stop Belumosudil"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Axatilimab'",
                                                          selectInput("Axatilimab", "Axatilimab treatment", 
                                                                      c("No Axatilimab", "Axatilimab", "Stop Axatilimab")),
-                                                         dateInput("DateAxatilimab", "Date start Axatilimab",
-                                                                   language = "it"),
-                                                         dateInput("DateAxatilimabStop", "Date stop Axatilimab",
-                                                                   language = "it")),
+                                                         dateInput("DateAxatilimab", "Date start Axatilimab"
+                                                                   ),
+                                                         dateInput("DateAxatilimabStop", "Date stop Axatilimab"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Begelomab'",
                                                          selectInput("Begelomab", "Begelomab treatment", 
                                                                      c("No Begelomab", "Begelomab", "Stop Begelomab")),
-                                                         dateInput("DateBegelomab", "Date start Begelomab",
-                                                                   language = "it"),
-                                                         dateInput("DateBegelomabStop", "Date stop Begelomab",
-                                                                   language = "it")),
+                                                         dateInput("DateBegelomab", "Date start Begelomab"
+                                                                   ),
+                                                         dateInput("DateBegelomabStop", "Date stop Begelomab"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Ibrutinib'",
                                                          selectInput("Ibrutinib", "Ibrutinib treatment", 
                                                                      c("No Ibrutinib", "Ibrutinib", "Stop Ibrutinib")),
-                                                         dateInput("DateIbrutinib", "Date start Ibrutinib",
-                                                                   language = "it"),
-                                                         dateInput("DateIbrutinibStop", "Date stop Ibrutinib",
-                                                                   language = "it")),
+                                                         dateInput("DateIbrutinib", "Date start Ibrutinib"
+                                                                   ),
+                                                         dateInput("DateIbrutinibStop", "Date stop Ibrutinib"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Sirolimus'",
                                                          selectInput("Sirolimus", "Sirolimus treatment", 
                                                                      c("No Sirolimus", "Full dose", "Tapering", "Stop Sirolimus")),
-                                                         dateInput("DateSirolimus", "Date start / change Sirolimus",
-                                                                   language = "it"),
-                                                         dateInput("DateSirolimusStop", "Date stop Sirolimus",
-                                                                   language = "it")),
+                                                         dateInput("DateSirolimus", "Date start / change Sirolimus"
+                                                                   ),
+                                                         dateInput("DateSirolimusStop", "Date stop Sirolimus"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Imatinib'",
                                                          selectInput("Imatinib", "Imatinib treatment", 
                                                                      c("No Imatinib", "Imatinib", "Stop Imatinib")),
-                                                         dateInput("DateImatinib", "Date start Imatinib",
-                                                                   language = "it"),
-                                                         dateInput("DateImatinibStop", "Date stop Imatinib",
-                                                                   language = "it")),
+                                                         dateInput("DateImatinib", "Date start Imatinib"
+                                                                   ),
+                                                         dateInput("DateImatinibStop", "Date stop Imatinib"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'mPDN Pulse'",
                                                          selectInput("Pulse", "mPDN Pulse treatment", 
                                                                      c("No mPDN Pulse", "mPDN Pulse", "Stop mPDN Pulse")),
-                                                         dateInput("DatePulse", "Date start mPDN Pulse",
-                                                                   language = "it"),
-                                                         dateInput("DatePulseStop", "Date stop mPDN Pulse",
-                                                                   language = "it")),
+                                                         dateInput("DatePulse", "Date start mPDN Pulse"
+                                                                   ),
+                                                         dateInput("DatePulseStop", "Date stop mPDN Pulse"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Mesenchymal Stromal Cell Therapy'",
                                                          selectInput("MSC", "MSC treatment", 
                                                                      c("No MSC", "MSC", "Stop MSC")),
-                                                         dateInput("DateMSC", "Date start MSC",
-                                                                   language = "it"),
-                                                         dateInput("DateMSCStop", "Date stop MSC",
-                                                                   language = "it")),
+                                                         dateInput("DateMSC", "Date start MSC"
+                                                                   ),
+                                                         dateInput("DateMSCStop", "Date stop MSC"
+                                                                   )),
                                         conditionalPanel("input.input1 == 'Topical ocular treatment'",
                                                          selectInput("Ocular", "Topical ocular treatment", 
                                                                      c("No topical ocular treatment", "Topical ocular treatment", "Stop topical ocular treatment")),
-                                                         dateInput("DateOcular", "Date start topical ocular treatment",
-                                                                   language = "it"),
-                                                         dateInput("DateOcularStop", "Date stop topical ocular treatment",
-                                                                   language = "it"),
+                                                         dateInput("DateOcular", "Date start topical ocular treatment"
+                                                                   ),
+                                                         dateInput("DateOcularStop", "Date stop topical ocular treatment"
+                                                                   ),
                                                          textInput("OcularText", "Specify topical ocular treatment")),  
                                         conditionalPanel("input.input1 == 'Other treatments'",
                                                          textInput("Other", "Other treatment"),  
@@ -532,9 +532,6 @@ server <- function(input, output) {
       }
       if(N_metrics[1,87] == summary_table[index,87]){
         N_metrics[1,88] <- summary_table[index,88]
-      }
-      if(N_metrics[1,91] == summary_table[index,91]){
-        N_metrics[1,92] <- summary_table[index,92]
       }
       if(N_metrics[1,95] == summary_table[index,95]){
         N_metrics[1,96] <- summary_table[index,96]
