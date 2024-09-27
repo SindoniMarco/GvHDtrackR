@@ -318,16 +318,12 @@ server <- function(input, output) {
                               ifelse(input$GvHD == "Yes" & input$GenitalTract2 == "Mild signs",1,
                                      ifelse(input$GvHD == "Yes" & input$GenitalTract2 == "Moderate signs",2,
                                             ifelse(input$GvHD == "Yes" & input$GenitalTract2 == "Severe signs with or without symptoms",3,0))))
-    overall_grading <- ifelse((skin_grading == 1 | mouth_grading == 1 | eyes_grading == 1 | GI_grading == 1 |
-                          liver_grading ==1 | joints_grading == 1 | genital_grading == 1) & lungs_grading == 0 & 
-                          ((skin_grading + mouth_grading + eyes_grading + GI_grading + liver_grading + joints_grading + genital_grading) <3), "Mild",
-                          ifelse((skin_grading == 1 | mouth_grading == 1 | eyes_grading == 1 | GI_grading == 1 |
-                                 liver_grading ==1 | joints_grading == 1 | genital_grading == 1) & 
-                                 ((skin_grading + mouth_grading + eyes_grading + GI_grading + liver_grading + joints_grading + genital_grading + lungs_grading) >2) |
-                                 (skin_grading == 2 | mouth_grading == 2 | eyes_grading == 2 | GI_grading == 2 |
-                                 liver_grading ==2 | joints_grading == 2 | genital_grading == 2 | lungs_grading == 1), "Moderate",
-                                 ifelse(skin_grading == 3 | mouth_grading == 3 | eyes_grading == 3 | GI_grading == 3 |
-                                    liver_grading ==3 | joints_grading == 3 | genital_grading == 3 | lungs_grading == 2 | lungs_grading == 3, "Severe", "No GvHD")))
+    organ <- c("skin", "mouth", "eyes", "GI", "liver", "joint", "genital", "lungs")
+    scored <- c(skin_grading, mouth_grading, eyes_grading, GI_grading, liver_grading, joints_grading, genital_grading, lungs_grading)
+    comb <- data.frame(organ,scored)
+    overall_grading <- ifelse(max(comb$scored) <2 & length(which(comb$scored !=0)) <3 & comb[which(comb$organ == "lungs"),2] == 0, "Mild",
+                         ifelse(length(which(comb$scored !=0)) >2 & max(comb$scored) <3 & comb[which(comb$organ == "lungs"),2] < 2, "Moderate",
+                                ifelse(max(comb$scored) >2 | comb[which(comb$organ == "lungs"),2] > 1, "Severe", "NA")))
     monthsinceHSCT <- (difftime(input$Date, input$DateHSCT))/30
     N_metrics <- matrix(c(input$Name, input$Surname, as.character(input$DateBirth), as.character(input$DateHSCT), monthsinceHSCT ,input$ID, as.character(input$Date),
                           input$GvHD, overall_grading,
