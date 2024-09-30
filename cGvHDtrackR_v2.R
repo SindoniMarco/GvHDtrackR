@@ -27,6 +27,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                 fluidRow(
                   column(3,
                         sidebarLayout(
+
                           sidebarPanel(width=12, id="sidebar1",
                                        h4("Patient general information"),
                             textInput("Name", "Name", value = summary_table$Name[1]),
@@ -321,9 +322,9 @@ server <- function(input, output) {
     organ <- c("skin", "mouth", "eyes", "GI", "liver", "joint", "genital", "lungs")
     scored <- c(skin_grading, mouth_grading, eyes_grading, GI_grading, liver_grading, joints_grading, genital_grading, lungs_grading)
     comb <- data.frame(organ,scored)
-    overall_grading <- ifelse(max(comb$scored) <2 & length(which(comb$scored !=0)) <3 & comb[which(comb$organ == "lungs"),2] == 0, "Mild",
-                         ifelse(length(which(comb$scored !=0)) >2 & max(comb$scored) <3 & comb[which(comb$organ == "lungs"),2] < 2, "Moderate",
-                                ifelse(max(comb$scored) >2 | comb[which(comb$organ == "lungs"),2] > 1, "Severe", "NA")))
+    overall_grading <- ifelse(min(comb$scored) >0 & max(comb$scored) <2 & length(which(comb$scored !=0)) <3 & comb[which(comb$organ == "lungs"),2] == 0, "Mild",
+                         ifelse(min(comb$scored) >0 & length(which(comb$scored !=0)) >2 & max(comb$scored) <3 & comb[which(comb$organ == "lungs"),2] < 2, "Moderate",
+                                ifelse(min(comb$scored) >0 & max(comb$scored) >2 | comb[which(comb$organ == "lungs"),2] > 1, "Severe", "NA")))
     monthsinceHSCT <- (difftime(input$Date, input$DateHSCT))/30
     N_metrics <- matrix(c(input$Name, input$Surname, as.character(input$DateBirth), as.character(input$DateHSCT), monthsinceHSCT ,input$ID, as.character(input$Date),
                           input$GvHD, overall_grading,
@@ -533,7 +534,7 @@ server <- function(input, output) {
         N_metrics[1,96] <- summary_table[index,96]
       }
       N_metrics[,5] <- round((difftime(as.character(as.Date(N_metrics[,7])),
-                                       as.Date(as.character(summary_table[index,4])))),
+                                       as.Date(as.character(summary_table[index,4]))))/30,
                              digits = 0)
     }
     N_metrics
