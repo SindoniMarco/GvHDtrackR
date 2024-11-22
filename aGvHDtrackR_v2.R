@@ -55,10 +55,10 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                                                     "6.1-15 mg/dL",
                                                                                     ">15 mg/dL")),
                                         selectInput("Liver2", "Liver biopsy", c("NA","No signs of GvHD", "Mild", "Moderate", "Severe")),
-                                        selectInput("LowerGI", "Quantity of diarrhea (mL)", c("NA", "<500 mL OR <10 mL/kg/die",
-                                                                                              "500-1000 mL OR 10-19 mL/kg/die",
-                                                                                              "1001-1500 mL OR 20-30 mL/kg/die",
-                                                                                              ">1500 mL OR OR >30 mL/kg/die",
+                                        selectInput("LowerGI", "Quantity of diarrhea (mL)", c("NA", "<500 mL OR <10 mL/kg/die or <4 episodes/day",
+                                                                                              "500-1000 mL OR 10-19 mL/kg/die or 4-6 episodes/day",
+                                                                                              "1001-1500 mL OR 20-30 mL/kg/die or  7-10 episodes/day",
+                                                                                              ">1500 mL OR OR >30 mL/kg/die or >10 episodes/day",
                                                                                               "Severe abdominal pain with and without ileus")),
                                         selectInput("UpperGI", "Upper GI symptoms", c("No or intermittent nausea, vomiting or anorexia", 
                                                                                       "Persistent nausea, vomiting or anorexia")),
@@ -204,9 +204,17 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                            mainPanel(width = 0)
                            )
                          ),
-                  column(8,
+                  column(3,
                          sidebarLayout(
                            sidebarPanel(width=12, id="sidebar4",
+                                        h4("Annotation for change/suspension of therapy"),
+                                        textInput("Annotation", "Annotation")),
+                           mainPanel (width = 0)
+                         )
+                  ),
+                  column(8,
+                         sidebarLayout(
+                           sidebarPanel(width=12, id="sidebar6",
                                         h4("Body Surface Area"),
                                         img(src="repview.png", width = 1000, height = 500)
                            ),
@@ -222,7 +230,8 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                     textOutput("title1"),
                     tableOutput("table1"),
                     textOutput("title2"),
-                    tableOutput("table2")
+                    tableOutput("table2"),
+                    plotOutput("plot")
                   )
 )
                    
@@ -241,12 +250,12 @@ server <- function(input, output, session) {
     upper_GI_stage <- ifelse(input$GvHD == "Yes" & input$UpperGI == "No or intermittent nausea, vomiting or anorexia", 0,
                              ifelse(input$GvHD == "Yes" & input$UpperGI ==  "Persistent nausea, vomiting or anorexia", 1,0))
     
-    lower_GI_stage <- ifelse(input$GvHD == "Yes" & input$LowerGI %in% c("NA", "<500 mL OR <10 mL/kg/die"), 0,
-                             ifelse(input$GvHD == "Yes" & input$LowerGI == "500-1000 mL OR 10-19 mL/kg/die", 1,
-                                    ifelse(input$GvHD == "Yes" & input$LowerGI == "1001-1500 mL OR 20-30 mL/kg/die", 2,
-                                           ifelse(input$GvHD == "Yes" & input$LowerGI == ">1500 mL OR OR >30 mL/kg/die", 3,
+    lower_GI_stage <- ifelse(input$GvHD == "Yes" & input$LowerGI %in% c("NA", "<500 mL OR <10 mL/kg/die or <4 episodes/day"), 0,
+                             ifelse(input$GvHD == "Yes" & input$LowerGI == "500-1000 mL OR 10-19 mL/kg/die or 4-6 episodes/day", 1,
+                                    ifelse(input$GvHD == "Yes" & input$LowerGI == "1001-1500 mL OR 20-30 mL/kg/die or  7-10 episodes/day", 2,
+                                           ifelse(input$GvHD == "Yes" & input$LowerGI == ">1500 mL OR OR >30 mL/kg/die or >10 episodes/day", 3,
                                                   ifelse(input$GvHD == "Yes" & input$LowerGI == "Severe abdominal pain with and without ileus",4,0)))))
-    
+
     aGvHD_overall <- ifelse(input$GvHD == "No" & skin_stage == 0 & liver_stage == 0 & upper_GI_stage == 0 & lower_GI_stage == 0, "No GvHD",
                             ifelse(input$GvHD == "Yes" & skin_stage %in% c(1,2) & liver_stage == 0 & upper_GI_stage == 0 & lower_GI_stage == 0, "Grade I",
                                    ifelse(input$GvHD == "Yes" & skin_stage == 3 | liver_stage == 1 | upper_GI_stage == 1 | lower_GI_stage == 1, "Grade II",
@@ -275,7 +284,8 @@ server <- function(input, output, session) {
                           input$Pulse, as.character(input$DatePulse), as.character(input$DatePulseStop),
                           input$MSC, as.character(input$DateMSC), as.character(input$DateMSCStop),
                           input$Other, as.character(input$DateOther), input$DrugOther, input$DrugOtherStop,
-                          input$Azathioprine, as.character(input$DateAzathioprine), as.character(input$DateAzathioprineStop)), ncol = 70)
+                          input$Azathioprine, as.character(input$DateAzathioprine), as.character(input$DateAzathioprineStop),
+                          input$Annotation), ncol = 71)
     N_metrics <- as.data.frame(N_metrics)
     colnames(N_metrics) <- c("Name",	"Surname", "Date of birth", "Date HSCT", "Days since HSCT","Patient ID", "Date of assessment",
                              "GvHD",	"aGvHD grading", 
@@ -299,7 +309,8 @@ server <- function(input, output, session) {
                              "Pulse treatment",	"Date starting Pulse", "Date stop Pulse",
                              "MSC treatment",	"Date starting MSC", "Date stop MSC",
                              "Other treatment",	"Date starting / change treatment", "Dose treatment", "Date stop treatment",
-                             "Azathioprine treatment",	"Date starting Azathioprine", "Date stop Azathioprine")
+                             "Azathioprine treatment",	"Date starting Azathioprine", "Date stop Azathioprine",
+                             "Annotation for change/suspension of therapy")
     N_metrics["Date starting / change CSA"] <- ifelse(N_metrics["CSA treatment"] == "No CSA", "", N_metrics["Date starting / change CSA"])
     N_metrics["Date stop CSA"] <- ifelse(N_metrics["CSA treatment"] == "No CSA", "",
                                          ifelse(N_metrics["CSA treatment"] %in% c("Full dose", "Tapering"), "Ongoing", N_metrics["Date stop CSA"]))

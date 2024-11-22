@@ -264,9 +264,17 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                            mainPanel(width = 0),
                          )
                   ),
-                column(8,
+                  column(3,
                          sidebarLayout(
                            sidebarPanel(width=12, id="sidebar4",
+                                        h4("Annotation for change/suspension of therapy"),
+                                        textInput("Annotation", "Annotation")),
+                           mainPanel (width = 0)
+                         )
+                  ),
+                column(8,
+                         sidebarLayout(
+                           sidebarPanel(width=12, id="sidebar5",
                                         h4("Body Surface Area"),
                                         img(src="repview.png", width = 1000, height = 500)
                            ),
@@ -356,7 +364,9 @@ server <- function(input, output) {
                           input$MSC, as.character(input$DateMSC), as.character(input$DateMSCStop),
                           input$Ocular, as.character(input$DateOcular), as.character(input$DateOcularStop), input$OcularText,
                           input$Other, input$DateOther, input$DrugOther, input$DrugOtherStop,
-                          input$Azathioprine, as.character(input$DateAzathioprine), as.character(input$DateAzathioprineStop)), ncol = 97)
+                          input$Azathioprine, as.character(input$DateAzathioprine), as.character(input$DateAzathioprineStop),
+                          input$Annotation),
+                        ncol = 98)
     N_metrics <- as.data.frame(N_metrics)
     colnames(N_metrics) <- c("Name",	"Surname", "Date of birth", "Date HSCT", "Months since HSCT","Patient ID", "Date of assessment",
                              "GvHD",	"Chronic GvHD grading",
@@ -388,7 +398,8 @@ server <- function(input, output) {
                              "MSC treatment",	"Date starting MSC", "Date stop MSC",
                              "Topical ocular treatment", "Date starting topical ocular treatment", "Date stop topical ocular treatment", "Specify ocular treatment",
                              "Other treatment",	"Date starting / change treatment", "Dose treatment", "Date stop treatment",
-                             "Azathioprine treatment",	"Date starting Azathioprine", "Date stop Azathioprine")
+                             "Azathioprine treatment",	"Date starting Azathioprine", "Date stop Azathioprine",
+                             "Annotation for change/suspension of therapy")
     N_metrics["Date starting / change CSA"] <- ifelse(N_metrics["CSA treatment"] == "No CSA", "", N_metrics["Date starting / change CSA"])
     N_metrics["Date stop CSA"] <- ifelse(N_metrics["CSA treatment"] == "No CSA", "",
                                          ifelse(N_metrics["CSA treatment"] %in% c("Full dose", "Tapering"), "Ongoing", N_metrics["Date stop CSA"]))
