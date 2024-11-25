@@ -19,7 +19,7 @@ birth <- ifelse(previous_data > 0, summary_table$`Date of birth`[1], Sys.Date())
 HSCT <- ifelse(previous_data > 0, summary_table$`Date HSCT`[1], Sys.Date())
 ID <- if(previous_data > 0) {summary_table$`Patient ID`[1]}
 treatment <- c("No CSA", "No MMF", "No mPDN", "No topical steroid", "No Ruxolitinib", "No ECP", "No Etanercept", 
-               "No Infliximab", "No Abatacept", "No Belumosudil", "No Begelomab", "No Sirolimus", "No mPDN Pulse", "No MSC",
+               "No Infliximab", "No Abatacept", "No Begelomab", "No Sirolimus", "No mPDN Pulse", "No MSC",
                "No Azathioprine")
 ui <- fluidPage(theme = shinytheme("cerulean"),
                 titlePanel("aGvHDtrackR"),
@@ -84,7 +84,6 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                                                             'Infliximab',
                                                                                             'Azathioprine',
                                                                                             'Abatacept',
-                                                                                            'Belumosudil',
                                                                                             'Begelomab',
                                                                                             'Sirolimus',
                                                                                             'mPDN Pulse',
@@ -160,13 +159,6 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                          dateInput("DateAbatacept", "Date start Abatacept"
                                                                    ),
                                                          dateInput("DateAbataceptStop", "Date stop Abatacept"
-                                                                   )),
-                                        conditionalPanel("input.input1 == 'Belumosudil'",
-                                                         selectInput("Belumosudil", "Belumosudil treatment", 
-                                                                     c("No Belumosudil", "Belumosudil", "Stop Belumosudil")),
-                                                         dateInput("DateBelumosudil", "Date start Belumosudil"
-                                                                   ),
-                                                         dateInput("DateBelumosudilStop", "Date stop Belumosudil"
                                                                    )),
                                         conditionalPanel("input.input1 == 'Begelomab'",
                                                          selectInput("Begelomab", "Begelomab treatment", 
@@ -278,14 +270,13 @@ server <- function(input, output, session) {
                           input$Etanercept, as.character(input$DateEtanercept), as.character(input$DateEtanerceptStop),
                           input$Infliximab, as.character(input$DateInfliximab), as.character(input$DateInfliximabStop),
                           input$Abatacept, as.character(input$DateAbatacept), as.character(input$DateAbataceptStop),
-                          input$Belumosudil, as.character(input$DateBelumosudil), as.character(input$DateBelumosudilStop),
                           input$Begelomab, as.character(input$DateBegelomab), as.character(input$DateBegelomabStop),
                           input$Sirolimus, as.character(input$DateSirolimus), as.character(input$DateSirolimusStop),
                           input$Pulse, as.character(input$DatePulse), as.character(input$DatePulseStop),
                           input$MSC, as.character(input$DateMSC), as.character(input$DateMSCStop),
                           input$Other, as.character(input$DateOther), input$DrugOther, input$DrugOtherStop,
                           input$Azathioprine, as.character(input$DateAzathioprine), as.character(input$DateAzathioprineStop),
-                          input$Annotation), ncol = 71)
+                          input$Annotation), ncol = 68)
     N_metrics <- as.data.frame(N_metrics)
     colnames(N_metrics) <- c("Name",	"Surname", "Date of birth", "Date HSCT", "Days since HSCT","Patient ID", "Date of assessment",
                              "GvHD",	"aGvHD grading", 
@@ -303,7 +294,6 @@ server <- function(input, output, session) {
                              "Etanercept treatment",	"Date starting Etanercept", "Date stop Etanercept",
                              "Infliximab treatment",	"Date starting Infliximab", "Date stop Infliximab",
                              "Abatacept treatment",	"Date starting Abatacept", "Date stop Abatacept",
-                             "Belumosudil treatment",	"Date starting Belumosudil", "Date stop Belumosudil",
                              "Begelomab treatment",	"Date starting Begelomab", "Date stop Begelomab",
                              "Sirolimus treatment",	"Date starting / change Sirolimus", "Date stop Sirolimus",
                              "Pulse treatment",	"Date starting Pulse", "Date stop Pulse",
@@ -348,10 +338,6 @@ server <- function(input, output, session) {
     N_metrics["Date starting Abatacept"] <- ifelse(N_metrics["Abatacept treatment"] == "No Abatacept","", N_metrics["Date starting Abatacept"])
     N_metrics["Date stop Abatacept"] <- ifelse(N_metrics["Abatacept treatment"] == "No Abatacept", "",
                                                ifelse(N_metrics["Abatacept treatment"] == "Abatacept", "Ongoing", N_metrics["Date stop Abatacept"]))
-    
-    N_metrics["Date starting Belumosudil"] <- ifelse(N_metrics["Belumosudil treatment"] == "No Belumosudil", "", N_metrics["Date starting Belumosudil"])
-    N_metrics["Date stop Belumosudil"] <- ifelse(N_metrics["Belumosudil treatment"] == "No Belumosudil","",
-                                                 ifelse(N_metrics["Belumosudil treatment"] == "Belumosudil", "Ongoing", N_metrics["Date stop Belumosudil"]))
     
     N_metrics["Date starting Begelomab"] <- ifelse(N_metrics["Begelomab treatment"] == "No Begelomab", "", N_metrics["Date starting Begelomab"])
     N_metrics["Date stop Begelomab"] <- ifelse(N_metrics["Begelomab treatment"] == "No Begelomab","",
@@ -413,9 +399,6 @@ server <- function(input, output, session) {
       }
       if(N_metrics[1,61] == summary_table[index,61]){
         N_metrics[1,62] <- summary_table[index,62]
-      }
-      if(N_metrics[1,68] == summary_table[index,68]){
-        N_metrics[1,69] <- summary_table[index,69]
       }
       N_metrics[,5] <- round((difftime(as.character(as.Date(N_metrics[,7])),
                                        as.Date(as.character(summary_table[index,4])))),
