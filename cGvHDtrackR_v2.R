@@ -267,7 +267,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                   column(3,
                          sidebarLayout(
                            sidebarPanel(width=12, id="sidebar4",
-                                        h4("Annotation for change/suspension of therapy"),
+                                        h4("Annotation for discontinuation of therapy"),
                                         textInput("Annotation", "Annotation")),
                            mainPanel (width = 0)
                          )
@@ -284,7 +284,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                 mainPanel(
                   downloadButton('download',"Download data"),
                   downloadButton('update',"Update Summary"),
-                  downloadButton('report',"Download daily report"),
+                  downloadButton('report',"Download daily PDF report"),
                   textOutput("title1"),
                   tableOutput("table1"),
                   textOutput("title2"),
