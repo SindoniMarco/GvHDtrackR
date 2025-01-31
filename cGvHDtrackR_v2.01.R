@@ -287,10 +287,20 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                   downloadButton('download',"Download data"),
                   downloadButton('update',"Update Summary"),
                   downloadButton('report',"Download daily PDF report"),
-                  textOutput("title1"),
+                  div(style = "height:80px"),
+                  
+                  tags$b(textOutput("title1")),
                   tableOutput("table1"),
-                  textOutput("title2"),
-                  tableOutput("table2")
+                  
+                  div(style = "height:50px"),
+                  
+                  tags$b(textOutput("title2")),
+                  tableOutput("table2"),
+                  
+                  div(style = "height:50px"),
+                  
+                  tags$b(textOutput("title3")),
+                  tableOutput("table3"),
                 )
 )
 
@@ -566,6 +576,38 @@ server <- function(input, output) {
       select(where(~ !(all(is.na(.)) | all(. == "")))) %>%
       select(where(~ !all(. %in% treatment)))
   })} else{renderTable({"No previous determination"})}
+  
+  output$title3 <- renderText("Worst assessment")
+  output$table3 <- if(length(summary_table$Name) == 0){
+    renderText({"No previous determination"})}
+  else{
+    index_grade_scoring <- which(summary_table$`Chronic GvHD grading` %in% "Severe")
+    if(length(index_grade_scoring) != 0) {
+      renderTable({
+        summary_table[max(index_grade_scoring),] %>%
+          select(where(~ !(all(is.na(.)) | all(. == "")))) %>%
+          select(where(~ !all(. %in% treatment)))
+      })} 
+    else{
+      index_grade_scoring <- which(summary_table$`Chronic GvHD grading` %in% "Moderate")
+      if(length(index_grade_scoring) != 0) {
+        renderTable({
+          summary_table[max(index_grade_scoring),] %>%
+            select(where(~ !(all(is.na(.)) | all(. == "")))) %>%
+            select(where(~ !all(. %in% treatment)))
+        })}
+      else{
+        index_grade_scoring <- which(summary_table$`Chronic GvHD grading` %in% "Mild")
+        if(length(index_grade_scoring) != 0) {
+          renderTable({
+            summary_table[max(index_grade_scoring),] %>%
+              select(where(~ !(all(is.na(.)) | all(. == "")))) %>%
+              select(where(~ !all(. %in% treatment)))
+          })}
+        else{renderText({"No previous determination"})}
+        }
+      }
+    }
   
   output$download <- downloadHandler(
     filename = function(){paste0(as.character(input$Date),"_", input$Surname, "_", input$Name, ".xlsx")}, 
