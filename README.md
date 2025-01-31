@@ -16,6 +16,9 @@ To use GvHDtrackR, you need to run it as a local Shiny app; required steps:
 ![image](https://github.com/user-attachments/assets/f61d21d4-91ce-4ef3-88d3-90d7a5b98f2a)
 
 
+## Download updated app
+When a new version is available, we reccomend to not overwrite the old one since the output could be incompatible. We reccomend to use the new versions on new patients. 
+
 ## Contacts
 E-mail: m.sindoni3@campus.unimib.it
 
