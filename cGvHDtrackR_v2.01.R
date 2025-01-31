@@ -575,7 +575,7 @@ server <- function(input, output) {
     summary_table[length(summary_table$Name),] %>%
       select(where(~ !(all(is.na(.)) | all(. == "")))) %>%
       select(where(~ !all(. %in% treatment)))
-  })} else{renderTable({"No previous determination"})}
+  })} else{renderText({"No previous determination"})}
   
   output$title3 <- renderText("Worst assessment")
   output$table3 <- if(length(summary_table$Name) == 0){
