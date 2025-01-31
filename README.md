@@ -19,6 +19,12 @@ To use GvHDtrackR, you need to run it as a local Shiny app; required steps:
 ## Download updated app
 When a new version is available, we reccomend to not overwrite the old one since the output could be incompatible. We reccomend to use the new versions on new patients. 
 
+## Version 2.01
+* Added a weight box (under GI GvHD assessment)
+* Added a text box to annotate the reason behind tratment discontinuation
+* Now it is possible to visualize the worst assessment in terms of overall GvHD scoring
+
+
 ## Contacts
 E-mail: m.sindoni3@campus.unimib.it
 
