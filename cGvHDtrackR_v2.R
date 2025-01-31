@@ -56,6 +56,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                         selectInput("Skin3", "Sclerotic features", 
                                                     c("No Sclerotic features", "Superficial sclerotic features (able to pinch)", 
                                                       "Deep sclerotic features / unable to pinch / impaired mobility / ulceration")),
+                                        selectInput("Overlap", "Overlap syndrome", c("No", "Yes")), 
                                         selectInput("Mouth", "Mouth symptoms", c("No symptoms", "Mild symptoms with disease signs but not limiting oral intake significantly",
                                                                                     "Moderate symptoms with partial limitation of oral intake",
                                                                                     "Severe symptoms with disease signs on examination with major limitation of oral intake")),
@@ -68,6 +69,7 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                                                       "GI symptoms associated with significant weightloss (>15%) over the past 3 months, Requires nutritional supplement for most caloric needs OR Esophageal dilation OR Severe diarrhea with interference with daily living")),
                                         selectInput("GI_low", "Lower GI biopsy", c("NA","No signs of GvHD", "Mild", "Moderate", "Severe")),
                                         selectInput("GI_high", "Upper GI biopsy", c("NA","No signs of GvHD", "Mild", "Moderate", "Severe")),
+                                        textInput("Weight", "Weight"),
                                         selectInput("Liver", "Liver function", c("Normal total bilirubin and ALT or AP <3 x ULN",
                                                                                  "Normal total bilirubin with ALT >3 to 5 x ULN or AP >3 x ULN",
                                                                                  "Elevated total bilirubin but < 3mg/dL or ALT >5 x ULN",
@@ -330,16 +332,16 @@ server <- function(input, output) {
     organ <- c("skin", "mouth", "eyes", "GI", "liver", "joint", "genital", "lungs")
     scored <- c(skin_grading, mouth_grading, eyes_grading, GI_grading, liver_grading, joints_grading, genital_grading, lungs_grading)
     comb <- data.frame(organ,scored)
-    overall_grading <- ifelse(max(comb$scored) < 2 & length(which(comb$scored !=0)) <3 & comb[which(comb$organ == "lungs"),2] == 0, "Mild",
+    overall_grading <- ifelse(min(comb$scored)>0 & max(comb$scored) < 2 & length(which(comb$scored !=0)) <3 & comb[which(comb$organ == "lungs"),2] == 0, "Mild",
                               ifelse((length(which(comb$scored !=0)) >= 3 & max(comb$scored) == 1) | max(comb$scored) == 2 & comb[which(comb$organ == "lungs"),2] < 2, "Moderate",
                                      ifelse(max(comb$scored) >= 3 | comb[which(comb$organ == "lungs"),2] >= 2, "Severe", "NA")))
     monthsinceHSCT <- (difftime(input$Date, input$DateHSCT))/30
     N_metrics <- matrix(c(input$Name, input$Surname, as.character(input$DateBirth), as.character(input$DateHSCT), monthsinceHSCT ,input$ID, as.character(input$Date),
                           input$GvHD, overall_grading,
-                          input$Skin1, input$Skin2, input$Skin3, skin_grading,
+                          input$Skin1, input$Skin2, input$Skin3, skin_grading, input$Overlap,
                           input$Mouth, mouth_grading,
                           input$Eyes, eyes_grading,
-                          input$GI, input$GI_low, input$GI_high, GI_grading, 
+                          input$GI, input$GI_low, input$GI_high, GI_grading, input$Weight,
                           input$Liver, input$Liver2, liver_grading,
                           input$Lungs, input$LungsScore ,lungs_grading,
                           input$JointAndFascia, joints_grading,
@@ -353,6 +355,7 @@ server <- function(input, output) {
                           input$Etanercept, as.character(input$DateEtanercept), as.character(input$DateEtanerceptStop),
                           input$Infliximab, as.character(input$DateInfliximab), as.character(input$DateInfliximabStop),
                           input$FAM, as.character(input$DateFAM), as.character(input$DateFAMStop),
+                          input$Azathioprine, as.character(input$DateAzathioprine), as.character(input$DateAzathioprineStop),
                           input$Abatacept, as.character(input$DateAbatacept), as.character(input$DateAbataceptStop),
                           input$Belumosudil, as.character(input$DateBelumosudil), as.character(input$DateBelumosudilStop),
                           input$Axatilimab, as.character(input$DateAxatilimab), as.character(input$DateAxatilimabStop),
@@ -364,16 +367,15 @@ server <- function(input, output) {
                           input$MSC, as.character(input$DateMSC), as.character(input$DateMSCStop),
                           input$Ocular, as.character(input$DateOcular), as.character(input$DateOcularStop), input$OcularText,
                           input$Other, input$DateOther, input$DrugOther, input$DrugOtherStop,
-                          input$Azathioprine, as.character(input$DateAzathioprine), as.character(input$DateAzathioprineStop),
                           input$Annotation),
-                        ncol = 98)
+                        ncol = 100)
     N_metrics <- as.data.frame(N_metrics)
     colnames(N_metrics) <- c("Name",	"Surname", "Date of birth", "Date HSCT", "Months since HSCT","Patient ID", "Date of assessment",
                              "GvHD",	"Chronic GvHD grading",
-                             "Skin manifestation", "BSA involvment", "Sclerotic features", "Skin grading",
+                             "Skin manifestation", "BSA involvment", "Sclerotic features", "Skin grading", "Overlap syndrome",
                              "Mouth symptoms", "Mouth grading",
                              "Eyes symptoms", "Eyes grading",
-                             "GI symptoms", "Lower GI biopsy", "Upper GI biopsy","GI grading",
+                             "GI symptoms", "Lower GI biopsy", "Upper GI biopsy","GI grading", "Weight",
                              "Liver Function", "Liver Biopsy", "Liver grading",
                              "Lungs symptoms", "Lungs score", "Lungs grading",
                              "Joints and Fascia symptoms","Joints and Fascia grading",
@@ -387,6 +389,7 @@ server <- function(input, output) {
                              "Etanercept treatment",	"Date starting Etanercept", "Date stop Etanercept",
                              "Infliximab treatment",	"Date starting Infliximab", "Date stop Infliximab",
                              "FAM treatment",	"Date starting FAM", "Date stop FAM",
+                             "Azathioprine treatment",	"Date starting Azathioprine", "Date stop Azathioprine",
                              "Abatacept treatment",	"Date starting Abatacept", "Date stop Abatacept",
                              "Belumosudil treatment",	"Date starting Belumosudil", "Date stop Belumosudil",
                              "Axatilimab treatment",	"Date starting Axatilimab", "Date stop Axatilimab",
@@ -398,7 +401,6 @@ server <- function(input, output) {
                              "MSC treatment",	"Date starting MSC", "Date stop MSC",
                              "Topical ocular treatment", "Date starting topical ocular treatment", "Date stop topical ocular treatment", "Specify ocular treatment",
                              "Other treatment",	"Date starting / change treatment", "Dose treatment", "Date stop treatment",
-                             "Azathioprine treatment",	"Date starting Azathioprine", "Date stop Azathioprine",
                              "Annotation for change/suspension of therapy")
     N_metrics["Date starting / change CSA"] <- ifelse(N_metrics["CSA treatment"] == "No CSA", "", N_metrics["Date starting / change CSA"])
     N_metrics["Date stop CSA"] <- ifelse(N_metrics["CSA treatment"] == "No CSA", "",
@@ -484,65 +486,65 @@ server <- function(input, output) {
     if(length(summary_table$Name) > 0){
       index <- length(summary_table[,1])
       N_metrics[1,c(1:4,6)] <- summary_table[index,c(1:4,6)]
-      if(N_metrics[1,33] == summary_table[index,33]){
-        N_metrics[1,34] <- summary_table[index,34]
+      if(N_metrics[1,35] == summary_table[index,35]){
+        N_metrics[1,36] <- summary_table[index,36]
       }
-      if(N_metrics[1,36] == summary_table[index,36]){
-        N_metrics[1,37] <- summary_table[index,37]
+      if(N_metrics[1,38] == summary_table[index,38]){
+        N_metrics[1,39] <- summary_table[index,39]
       }
-      if(N_metrics[1,39] == summary_table[index,39]){
-        N_metrics[1,40] <- summary_table[index,40]
+      if(N_metrics[1,41] == summary_table[index,41]){
+        N_metrics[1,42] <- summary_table[index,42]
       }
-      if(N_metrics[1,42] == summary_table[index,42]){
-        N_metrics[1,43] <- summary_table[index,43]
+      if(N_metrics[1,44] == summary_table[index,44]){
+        N_metrics[1,45] <- summary_table[index,45]
       }
-      if(N_metrics[1,45] == summary_table[index,45]){
-        N_metrics[1,46] <- summary_table[index,46]
+      if(N_metrics[1,47] == summary_table[index,47]){
+        N_metrics[1,48] <- summary_table[index,48]
       }
-      if(N_metrics[1,48] == summary_table[index,48]){
-        N_metrics[1,49] <- summary_table[index,49]
+      if(N_metrics[1,50] == summary_table[index,50]){
+        N_metrics[1,51] <- summary_table[index,51]
       }
-      if(N_metrics[1,51] == summary_table[index,51]){
-        N_metrics[1,52] <- summary_table[index,52]
+      if(N_metrics[1,53] == summary_table[index,53]){
+        N_metrics[1,54] <- summary_table[index,54]
       }
-      if(N_metrics[1,54] == summary_table[index,54]){
-        N_metrics[1,55] <- summary_table[index,55]
+      if(N_metrics[1,56] == summary_table[index,56]){
+        N_metrics[1,57] <- summary_table[index,57]
       }
-      if(N_metrics[1,57] == summary_table[index,57]){
-        N_metrics[1,58] <- summary_table[index,58]
+      if(N_metrics[1,59] == summary_table[index,59]){
+        N_metrics[1,60] <- summary_table[index,60]
       }
-      if(N_metrics[1,60] == summary_table[index,60]){
-        N_metrics[1,61] <- summary_table[index,61]
+      if(N_metrics[1,62] == summary_table[index,62]){
+        N_metrics[1,63] <- summary_table[index,63]
       }
-      if(N_metrics[1,63] == summary_table[index,63]){
-        N_metrics[1,64] <- summary_table[index,64]
+      if(N_metrics[1,65] == summary_table[index,65]){
+        N_metrics[1,66] <- summary_table[index,66]
       }
-      if(N_metrics[1,66] == summary_table[index,66]){
-        N_metrics[1,67] <- summary_table[index,67]
+      if(N_metrics[1,68] == summary_table[index,68]){
+        N_metrics[1,69] <- summary_table[index,69]
       }
-      if(N_metrics[1,69] == summary_table[index,69]){
-        N_metrics[1,70] <- summary_table[index,70]
+      if(N_metrics[1,71] == summary_table[index,71]){
+        N_metrics[1,72] <- summary_table[index,72]
       }
-      if(N_metrics[1,72] == summary_table[index,72]){
-        N_metrics[1,73] <- summary_table[index,73]
+      if(N_metrics[1,74] == summary_table[index,74]){
+        N_metrics[1,75] <- summary_table[index,75]
       }
-      if(N_metrics[1,75] == summary_table[index,75]){
-        N_metrics[1,76] <- summary_table[index,76]
+      if(N_metrics[1,77] == summary_table[index,77]){
+        N_metrics[1,78] <- summary_table[index,78]
       }
-      if(N_metrics[1,78] == summary_table[index,78]){
-        N_metrics[1,79] <- summary_table[index,79]
+      if(N_metrics[1,80] == summary_table[index,80]){
+        N_metrics[1,81] <- summary_table[index,81]
       }
-      if(N_metrics[1,81] == summary_table[index,81]){
-        N_metrics[1,82] <- summary_table[index,82]
+      if(N_metrics[1,83] == summary_table[index,83]){
+        N_metrics[1,84] <- summary_table[index,84]
       }
-      if(N_metrics[1,84] == summary_table[index,84]){
-        N_metrics[1,85] <- summary_table[index,85]
+      if(N_metrics[1,86] == summary_table[index,86]){
+        N_metrics[1,87] <- summary_table[index,87]
       }
-      if(N_metrics[1,87] == summary_table[index,87]){
-        N_metrics[1,88] <- summary_table[index,88]
+      if(N_metrics[1,89] == summary_table[index,89]){
+        N_metrics[1,90] <- summary_table[index,90]
       }
-      if(N_metrics[1,95] == summary_table[index,95]){
-        N_metrics[1,96] <- summary_table[index,96]
+      if(N_metrics[1,92] == summary_table[index,92]){
+        N_metrics[1,93] <- summary_table[index,93]
       }
       N_metrics[,5] <- round((difftime(as.character(as.Date(N_metrics[,7])),
                                        as.Date(as.character(summary_table[index,4]))))/30,
